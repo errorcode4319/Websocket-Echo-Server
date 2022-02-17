@@ -146,6 +146,7 @@
     <ClCompile Include="..\src\tcp-socket.cpp" />
     <ClCompile Include="..\src\tcp-util.cpp" />
     <ClCompile Include="..\src\ws-listener.cpp" />
+    <ClCompile Include="..\src\ws-secure-util.cpp" />
     <ClCompile Include="..\src\ws-server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="..\src\tcp-socket.h" />
     <ClInclude Include="..\src\tcp-util.h" />
     <ClInclude Include="..\src\ws-listener.h" />
+    <ClInclude Include="..\src\ws-secure-util.h" />
     <ClInclude Include="..\src\ws-server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

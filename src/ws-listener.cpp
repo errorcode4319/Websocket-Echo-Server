@@ -1,6 +1,5 @@
 #include"ws-listener.h"
 #include<exception>
-#include"http-message.h"
 
 namespace ws {
 
@@ -65,8 +64,12 @@ namespace ws {
             
             if (upgrade == "websocket" && connection == "Upgrade") {
                 std::cout << "WebSocket Connection Request" << std::endl;
-                std::cout << "Sec-WebSocket-Key => " << req.getHeader("Sec-WebSocket-Key") << std::endl;
-                std::cout << "Sec-WebSocket-Version => " << req.getHeader("Sec-WebSocket-Version") << std::endl;
+                if (ws_handshake(clntSock, req)) {
+                    std::cout << "Handshake Success" << std::endl;
+                }
+                else {
+                    std::cout << "Handshake Failed" << std::endl;
+                }
             }
             else {
                 std::cout << "Not Websocket Connection Request" << std::endl;
@@ -77,6 +80,21 @@ namespace ws {
         }
 
 	}
+
+    bool WebSocketListener::ws_handshake(tcp::Socket& clnt_sock, http::HttpMessage& req) {
+
+
+        auto ws_key = req.getHeader("Sec-WebSocket-Key");
+        auto ws_version = req.getHeader("Sec-WebSocket-Version");
+
+        std::cout << "Sec-WebSocket-Key => " << ws_key << std::endl;
+        std::cout << "Sec-WebSocket-Version => " << ws_version << std::endl;
+
+        ws_key += WS_KEY_POSTFIX;
+        // ws_key -> SHA1 -> Base64 Enc -> ws_access!!  
+
+        return true;
+    }
 
     bool WebSocketListener::wait_new_client(int timeout_ms) {
         struct timeval to;
