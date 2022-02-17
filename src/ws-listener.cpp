@@ -60,11 +60,17 @@ namespace ws {
             //std::cout << rdBuf << std::endl;
             http::HttpMessage req(rdBuf);
             std::cout << "---Received New Request------------" << std::endl;
-            std::cout << "Target     => " << req.getTarget() << std::endl;
-            std::cout << "Method     => " << req.getMethod() << std::endl;
-            std::cout << "Host       => " << req.getHeader("Host") << std::endl;
-            std::cout << "Connection => " << req.getHeader("Connection") << std::endl;
-            std::cout << "Upgrade    => " << req.getHeader("Upgrade") << std::endl;
+            auto upgrade = req.getHeader("Upgrade");
+            auto connection = req.getHeader("Connection");
+            
+            if (upgrade == "websocket" && connection == "Upgrade") {
+                std::cout << "WebSocket Connection Request" << std::endl;
+                std::cout << "Sec-WebSocket-Key => " << req.getHeader("Sec-WebSocket-Key") << std::endl;
+                std::cout << "Sec-WebSocket-Version => " << req.getHeader("Sec-WebSocket-Version") << std::endl;
+            }
+            else {
+                std::cout << "Not Websocket Connection Request" << std::endl;
+            }
             std::cout << std::endl;
 
             clntSock._close();
