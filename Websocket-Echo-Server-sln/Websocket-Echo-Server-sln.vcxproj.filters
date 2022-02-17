@@ -22,6 +22,9 @@
     <ClCompile Include="..\src\tcp-util.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\http-message.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ws-server.h">
@@ -34,6 +37,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\tcp-util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\http-message.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

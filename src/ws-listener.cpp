@@ -1,5 +1,6 @@
 #include"ws-listener.h"
 #include<exception>
+#include"http-message.h"
 
 namespace ws {
 
@@ -55,7 +56,14 @@ namespace ws {
             tcp::SocketAddr clntAddr(addr);
             std::string rdBuf;
             clntSock._msg_pull(rdBuf, 4096);
+
             std::cout << rdBuf << std::endl;
+            http::HttpMessage req(rdBuf);
+            std::cout << "Target => " << req.getTarget() << std::endl;
+            std::cout << "Method => " << req.getMethod() << std::endl;
+            std::cout << "Connection => " << req.getHeader("Connection") << std::endl;
+            std::cout << "Upgrade => " << req.getHeader("Upgrade") << std::endl;
+
             clntSock._close();
         }
 

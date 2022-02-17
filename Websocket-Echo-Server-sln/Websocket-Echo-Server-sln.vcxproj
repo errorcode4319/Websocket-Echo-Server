@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\http-message.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\tcp-socket.cpp" />
     <ClCompile Include="..\src\tcp-util.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="..\src\ws-server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\http-message.h" />
     <ClInclude Include="..\src\tcp-socket.h" />
     <ClInclude Include="..\src\tcp-util.h" />
     <ClInclude Include="..\src\ws-listener.h" />
