@@ -31,13 +31,12 @@ namespace http {
 		while (raw_header.find("\r\n") != std::string::npos) {
 			auto header_del_iter = raw_header.find("\r\n");
 			auto kv_del_iter = raw_header.find(':');
+			auto value_len = header_del_iter - kv_del_iter - 1;
 
 			auto header_data = raw_header.substr(0, header_del_iter);
 			auto key = raw_header.substr(0, kv_del_iter);
-			auto value = raw_header.substr(kv_del_iter + 1, header_del_iter);
-			while (value[0] == ' ') {
-				value = value.substr(1);
-			}
+			auto value = raw_header.substr(kv_del_iter + 2, value_len);
+
 			mHeader[std::string(key)] = std::string(value);
 			raw_header = raw_header.substr(header_del_iter + 2);
 		}

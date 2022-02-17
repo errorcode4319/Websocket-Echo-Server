@@ -57,12 +57,15 @@ namespace ws {
             std::string rdBuf;
             clntSock._msg_pull(rdBuf, 4096);
 
-            std::cout << rdBuf << std::endl;
+            //std::cout << rdBuf << std::endl;
             http::HttpMessage req(rdBuf);
-            std::cout << "Target => " << req.getTarget() << std::endl;
-            std::cout << "Method => " << req.getMethod() << std::endl;
+            std::cout << "---Received New Request------------" << std::endl;
+            std::cout << "Target     => " << req.getTarget() << std::endl;
+            std::cout << "Method     => " << req.getMethod() << std::endl;
+            std::cout << "Host       => " << req.getHeader("Host") << std::endl;
             std::cout << "Connection => " << req.getHeader("Connection") << std::endl;
-            std::cout << "Upgrade => " << req.getHeader("Upgrade") << std::endl;
+            std::cout << "Upgrade    => " << req.getHeader("Upgrade") << std::endl;
+            std::cout << std::endl;
 
             clntSock._close();
         }
