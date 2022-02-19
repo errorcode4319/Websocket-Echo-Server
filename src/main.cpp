@@ -3,8 +3,7 @@
 #include"ws-secure-util.h"
 
 int main() {
-
-
+	
 	ws::WebSocketServer ws_server;
 	ws_server.init();
 	ws_server.run();

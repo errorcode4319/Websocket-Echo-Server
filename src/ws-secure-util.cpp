@@ -59,15 +59,50 @@ namespace ws {
         return dst;
     }
 
-    size_t base64_decode(const std::string& src, size_t src_len, uint8_t* dst) {
+    size_t base64_decode(const std::string& src, uint8_t* dst) {
+        size_t dst_idx = 0;
+        int phase = 0;
+        int dec = 0;
+        int prev_dec = 0;
 
+        for (const auto& c : src) {
+            dec = decBase64[size_t(c)];
+            if (dec != -1) {
+                switch (phase) {
+                case 0: 
+                    phase++; break;
+                case 1:
+                    dst[dst_idx++] = uint8_t(((prev_dec << 2) | ((dec & 0x30) >> 4)));
+                    phase++; break;
+                case 2:
+                    dst[dst_idx++] = uint8_t((((prev_dec & 0xf) << 4) | ((dec & 0x3c) >> 2)));
+                    phase++; break;
+                case 3:
+                    dst[dst_idx++] = uint8_t((((prev_dec & 0x03) << 6) | dec));
+                    phase = 0;
+                    break;
+                }
+                prev_dec = dec;
+            }
+        }
+        return dst_idx;
     }
 
 	std::string base64_decode(std::string_view src) {
+        size_t src_len = src.length();
+        uint8_t* dst_buf = new uint8_t[src_len];
 
+        size_t dst_len = base64_decode(src.data(), dst_buf);
+        std::string dst = std::string(reinterpret_cast<char*>(dst_buf));
+
+        delete[] dst_buf;
+
+        return dst;
 	}
 
     std::string create_ws_access_key(std::string_view ws_key) {
+
+
 
     }
 
