@@ -3,6 +3,7 @@
 #include "ws-payload.h"
 #include "tcp-socket.h"
 #include <memory>
+#include <iomanip>
 
 namespace ws {
 

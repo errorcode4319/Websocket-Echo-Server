@@ -35,7 +35,7 @@ namespace ws {
 		WSPayload();
 		~WSPayload();
 
-		bool parseHeader(const std::vector<uint8_t>& raw_header);
+		size_t parseHeader(const std::vector<uint8_t>& raw_header);
 
 		void getRawPacket(std::vector<uint8_t>& buf);
 
