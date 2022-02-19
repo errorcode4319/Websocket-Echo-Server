@@ -18,7 +18,7 @@ namespace ws {
 
 	std::string base64_decode(std::string_view src);
 
-	std::string create_ws_access_key(std::string_view ws_key);
+	std::string gen_ws_access_key(std::string_view ws_key);
 }
 
 #endif //__WS_SECURE_H

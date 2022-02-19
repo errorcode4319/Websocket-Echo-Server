@@ -9,6 +9,8 @@
 
 namespace ws {
 
+    constexpr const char* WS_KEY_POSTFIX = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+
     void sha1_hash(const uint8_t* src, size_t src_len, uint8_t* digest) {
         SHA_CTX shactx;
         SHA1_Init(&shactx);
@@ -99,10 +101,13 @@ namespace ws {
         return dst;
 	}
 
-    std::string create_ws_access_key(std::string_view ws_key) {
-
-
-
+    std::string gen_ws_access_key(std::string_view ws_key) {
+        std::string src = ws_key.data();
+        src += WS_KEY_POSTFIX;
+        auto src_sha1_hash = sha1_hash(src);
+        std::string dst;
+        auto _ = base64_encode(src_sha1_hash.data(), src_sha1_hash.size(), dst);
+        return dst;
     }
 
 }
