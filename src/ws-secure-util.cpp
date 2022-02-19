@@ -9,19 +9,18 @@
 
 namespace ws {
 
-    std::string sha1_hash(std::string_view src) {
-
-        size_t len = src.length();
-
+    void sha1_hash(const uint8_t* src, size_t src_len, uint8_t* digest) {
         SHA_CTX shactx;
-        std::string digest;
-        digest.resize(SHA_DIGEST_LENGTH);
-
         SHA1_Init(&shactx);
-        SHA1_Update(&shactx, src.data(), len);
-        SHA1_Final(reinterpret_cast<uint8_t*>(digest.data()), &shactx);
+        SHA1_Update(&shactx, src, src_len);
+        SHA1_Final(digest, &shactx);
+    }
 
-        return digest;
+    std::vector<uint8_t> sha1_hash(std::string_view src) {
+        std::vector<uint8_t> dst(SHA_DIGEST_LENGTH);
+        const uint8_t* src_ptr = reinterpret_cast<const uint8_t*>(src.data());
+        sha1_hash(src_ptr, src.length(), dst.data());
+        return dst;
     }
 
     size_t base64_encode(const uint8_t* src, size_t src_len, std::string& dst) {

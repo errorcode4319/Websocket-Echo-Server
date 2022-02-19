@@ -2,10 +2,13 @@
 #define __WS_SECURE_H
 #include<iostream>
 #include<cstdint>
+#include<vector>
 
 namespace ws {
 
-	std::string sha1_hash(std::string_view src);
+	void sha1_hash(const uint8_t* src, size_t src_len, uint8_t* digest);
+
+	std::vector<uint8_t> sha1_hash(std::string_view src);
 
 	size_t base64_encode(const uint8_t* src, size_t src_len, std::string& dst);
 
