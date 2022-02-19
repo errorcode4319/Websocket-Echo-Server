@@ -6,10 +6,10 @@
 
 namespace ws {
 
-	class WebSocketServer {
+	class WSServer {
 	public:
-		WebSocketServer();
-		~WebSocketServer();
+		WSServer();
+		~WSServer();
 
 		int		init();
 		int		run(std::string_view ip = "0.0.0.0", int port = 7070);
@@ -18,7 +18,7 @@ namespace ws {
 
 	private:
 		bool	mIsRunning = false;
-		std::unique_ptr<WebSocketListener> mListener;
+		std::unique_ptr<WSListener> mListener;
 	};
 
 }

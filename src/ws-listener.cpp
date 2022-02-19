@@ -1,5 +1,6 @@
 #include"ws-listener.h"
 #include"ws-secure-util.h"
+#include"ws-connection.h"
 #include<exception>
 #include<sstream>
 
@@ -11,24 +12,24 @@ namespace ws {
         "Connection: Upgrade\r\n"
         "Sec-WebSocket-Accept: ";
 
-	WebSocketListener::WebSocketListener() {
+	WSListener::WSListener() {
 
 	}
 
-	WebSocketListener::~WebSocketListener() {
+	WSListener::~WSListener() {
         release();
 	}
 
-	int WebSocketListener::run(std::string_view ip, int port) {
+	int WSListener::run(std::string_view ip, int port) {
         if (mIsRunning) return 1;
         int ret = socketInit(ip, port);
         if (ret != 0) return -1;
         mIsRunning = true;
-        mListenerThread = std::thread{ &WebSocketListener::listener_process, this };
+        mListenerThread = std::thread{ &WSListener::listener_process, this };
         return 0;
 	}
 
-	int WebSocketListener::socketInit(std::string_view ip, int port) {
+	int WSListener::socketInit(std::string_view ip, int port) {
         mListenerAddr = tcp::SocketAddr(ip, port);
         if (mListenerSocket._new() == INVALID_SOCKET) {
             return 1;
@@ -46,7 +47,7 @@ namespace ws {
         return 0;
 	}
 
-	void WebSocketListener::listener_process() {
+	void WSListener::listener_process() {
 
         tcp::sock_t listener_sd = mListenerSocket.get();
 
@@ -76,6 +77,8 @@ namespace ws {
                     /*
                         Send Client Socket to Main Service 
                     */
+                    auto conn = std::make_shared<WSConnection>(clntSock);
+                    conn->read();
                 }
                 else {
                     std::cout << "Handshake Failed" << std::endl;
@@ -90,14 +93,14 @@ namespace ws {
 
 	}
 
-    bool WebSocketListener::ws_handshake(tcp::Socket& clnt_sock, http::HttpMessage& req) {
+    bool WSListener::ws_handshake(tcp::Socket& clnt_sock, http::HttpMessage& req) {
 
         auto ws_key = req.getHeader("Sec-WebSocket-Key");
         auto ws_version = req.getHeader("Sec-WebSocket-Version");
-
+        /*
         std::cout << "Sec-WebSocket-Key => " << ws_key << std::endl;
         std::cout << "Sec-WebSocket-Version => " << ws_version << std::endl;
-
+        */ 
         auto ws_access = ws::gen_ws_access_key(ws_key);
 
         std::stringstream res;
@@ -108,14 +111,13 @@ namespace ws {
         std::cout << res_msg << std::endl;
 
         int serv_bytes = clnt_sock._msg_push(res_msg);
-        std::cout << serv_bytes << "  " << res_msg.size() << std::endl;
         if (serv_bytes < int(res_msg.size())) {
             return false;
         }
         return true;
     }
 
-    bool WebSocketListener::wait_new_client(int timeout_ms) {
+    bool WSListener::wait_new_client(int timeout_ms) {
         struct timeval to;
         to.tv_sec = timeout_ms / 1000;
         to.tv_usec = (timeout_ms % 1000) * 1000;
@@ -128,7 +130,7 @@ namespace ws {
         return true;
     }
 
-    void WebSocketListener::release() {
+    void WSListener::release() {
         mIsRunning = false;
         if (mListenerThread.joinable())
             mListenerThread.join();

@@ -11,11 +11,11 @@ namespace ws {
 
 	constexpr int LISTENER_BACK_LOG = 512;
 
-	class WebSocketListener {
+	class WSListener {
 
 	public:
-		WebSocketListener();
-		~WebSocketListener();
+		WSListener();
+		~WSListener();
 
 		int		run(std::string_view ip, int port);
 		bool	isRunning() const { return mIsRunning; }

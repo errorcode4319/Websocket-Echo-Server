@@ -2,26 +2,26 @@
 
 namespace ws {
 
-	WebSocketServer::WebSocketServer() {
+	WSServer::WSServer() {
 
 	}
 
-	WebSocketServer::~WebSocketServer() {
+	WSServer::~WSServer() {
 		stop();
 	}
 
-	int WebSocketServer::init() {
-		mListener = std::make_unique<WebSocketListener>();
+	int WSServer::init() {
+		mListener = std::make_unique<WSListener>();
 
 		return 0;
 	}
 
-	int WebSocketServer::run(std::string_view ip, int port) {
+	int WSServer::run(std::string_view ip, int port) {
 		mListener->run(ip, port);
 		return 0;
 	}
 
-	int WebSocketServer::stop() {
+	int WSServer::stop() {
 		mListener.reset();
 		return 0;
 	}

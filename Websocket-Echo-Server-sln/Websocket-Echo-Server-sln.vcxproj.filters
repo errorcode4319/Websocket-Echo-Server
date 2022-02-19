@@ -28,6 +28,12 @@
     <ClCompile Include="..\src\ws-secure-util.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ws-payload.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ws-connection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ws-server.h">
@@ -49,6 +55,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\base64-table.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ws-connection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ws-payload.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
