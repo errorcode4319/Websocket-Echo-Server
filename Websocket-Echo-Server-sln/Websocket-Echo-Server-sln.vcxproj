@@ -150,6 +150,7 @@
     <ClCompile Include="..\src\ws-server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\base64-table.h" />
     <ClInclude Include="..\src\http-message.h" />
     <ClInclude Include="..\src\tcp-socket.h" />
     <ClInclude Include="..\src\tcp-util.h" />

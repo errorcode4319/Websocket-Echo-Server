@@ -93,6 +93,8 @@ namespace ws {
         ws_key += WS_KEY_POSTFIX;
         // ws_key -> SHA1 -> Base64 Enc -> ws_access!!  
 
+
+
         return true;
     }
 

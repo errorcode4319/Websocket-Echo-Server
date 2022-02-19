@@ -48,5 +48,8 @@
     <ClInclude Include="..\src\ws-secure-util.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\base64-table.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
