@@ -9,8 +9,6 @@
 
 namespace ws {
 
-	const std::string WS_KEY_POSTFIX
-		= "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 	constexpr int LISTENER_BACK_LOG = 512;
 
 	class WebSocketListener {

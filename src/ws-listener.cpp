@@ -1,8 +1,15 @@
 #include"ws-listener.h"
+#include"ws-secure-util.h"
 #include<exception>
+#include<sstream>
 
 namespace ws {
 
+    constexpr const char* HANDSHAKE_RESPONSE_INTERFACE =
+        "HTTP/1.1 101 Switching Protocols\r\n"
+        "Upgrade: websocket\r\n"
+        "Connection: Upgrade\r\n"
+        "Sec-WebSocket-Accept: ";
 
 	WebSocketListener::WebSocketListener() {
 
@@ -66,23 +73,24 @@ namespace ws {
                 std::cout << "WebSocket Connection Request" << std::endl;
                 if (ws_handshake(clntSock, req)) {
                     std::cout << "Handshake Success" << std::endl;
+                    /*
+                        Send Client Socket to Main Service 
+                    */
                 }
                 else {
                     std::cout << "Handshake Failed" << std::endl;
+                    clntSock._close();
                 }
             }
             else {
                 std::cout << "Not Websocket Connection Request" << std::endl;
             }
             std::cout << std::endl;
-
-            clntSock._close();
         }
 
 	}
 
     bool WebSocketListener::ws_handshake(tcp::Socket& clnt_sock, http::HttpMessage& req) {
-
 
         auto ws_key = req.getHeader("Sec-WebSocket-Key");
         auto ws_version = req.getHeader("Sec-WebSocket-Version");
@@ -90,11 +98,20 @@ namespace ws {
         std::cout << "Sec-WebSocket-Key => " << ws_key << std::endl;
         std::cout << "Sec-WebSocket-Version => " << ws_version << std::endl;
 
-        ws_key += WS_KEY_POSTFIX;
-        // ws_key -> SHA1 -> Base64 Enc -> ws_access!!  
+        auto ws_access = ws::gen_ws_access_key(ws_key);
 
+        std::stringstream res;
+        res << HANDSHAKE_RESPONSE_INTERFACE << ws_access << "\r\n\r\n" << std::endl;
 
+        std::cout << "Handshake Response => " << std::endl;
+        std::string res_msg = res.str();
+        std::cout << res_msg << std::endl;
 
+        int serv_bytes = clnt_sock._msg_push(res_msg);
+        std::cout << serv_bytes << "  " << res_msg.size() << std::endl;
+        if (serv_bytes < int(res_msg.size())) {
+            return false;
+        }
         return true;
     }
 
