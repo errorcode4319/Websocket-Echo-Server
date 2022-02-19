@@ -52,15 +52,33 @@ namespace ws {
 			mBody = body; 
 			mHeader.len = mBody.data.size();
 		}
+		void	setBody(const std::vector<uint8_t>& body) {
+			mBody.data = body;
+			mHeader.len = body.size();
+		}
 		
 		FLAG	getIsFin() const { return mHeader.fin; }
-		void	setIsFin(FLAG isFin) { mHeader.fin = isFin; }
+		void	setIsFin(bool isFin) { mHeader.fin = isFin; }
 
 		OPCODE	getOPCode() const { return mHeader.opcode;}
 		void	setOPCode(OPCODE opcode) { mHeader.opcode = opcode; }
+		void	setOPCode(uint8_t u_opcode) {
+			switch (u_opcode) {
+			case 0x00: mHeader.opcode = OPCODE::CONTINUE; break;
+			case 0x01: mHeader.opcode = OPCODE::TEXT; break;
+			case 0x02: mHeader.opcode = OPCODE::BINARY; break;
+			case 0x08: mHeader.opcode = OPCODE::CLOSE; break;
+			case 0x09: mHeader.opcode = OPCODE::PONG; break;
+			case 0x0A: mHeader.opcode = OPCODE::PONG; break;
+			default: mHeader.opcode = OPCODE::UNKNOWN; break;
+			}
+		}
 
 		FLAG	getIsMasked() const { return mHeader.mask; }
-		void	setIsMasked(FLAG isMasked) { mHeader.mask = isMasked; }
+		void	setIsMasked(bool isMasked) { mHeader.mask = isMasked; }
+
+		uint32_t getMaskKey() const { return mHeader.mask_key; }
+		void	setMaskKey(uint32_t mask_key) { mHeader.mask_key = mask_key; }
 
 		uint64_t getLen() const { return mHeader.len; }
 		void	setLen(uint64_t len) { mHeader.len = len; }

@@ -12,7 +12,8 @@ namespace ws {
 		WSConnection(tcp::Socket socket);
 		~WSConnection();
 
-		WSPayload read();
+		/* if read data failed, return false  */
+		bool read(WSPayload& payload);
 
 		std::shared_ptr<WSConnection> share() {
 			return shared_from_this();

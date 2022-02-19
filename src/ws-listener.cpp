@@ -78,7 +78,10 @@ namespace ws {
                         Send Client Socket to Main Service 
                     */
                     auto conn = std::make_shared<WSConnection>(clntSock);
-                    auto payload = conn->read();
+                    WSPayload payload;
+                    if (conn->read(payload) == false) {
+                        continue;
+                    }
                     auto header = payload.getHeader();
                     std::cout << "FIN: " << header.fin << std::endl;
                     std::cout << "Opcode: " << int(payload.getOPCode()) << std::endl;
