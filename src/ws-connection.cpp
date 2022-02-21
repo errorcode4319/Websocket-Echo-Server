@@ -9,7 +9,7 @@ namespace ws {
 	WSConnection::~WSConnection() {
 		mSocket._close();
 	}
-
+	
 	bool WSConnection::read(WSPayload& payload) {
 		std::vector<uint8_t> raw_header(14);
 		int offset = 0;

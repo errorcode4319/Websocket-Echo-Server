@@ -61,6 +61,50 @@ namespace ws {
 
 	void WSPayload::getRawPacket(std::vector<uint8_t>& buf) {
 		
+		size_t header_len = 2;
+		size_t body_len = mHeader.len;
+		if (126 <= body_len && body_len < 0x10000) {
+			header_len += 2;
+		}
+		else if (body_len >= 0x10000) {
+			header_len += 8;
+		}
+		if (mHeader.mask) {
+			header_len += 4;
+		}
+		size_t payload_len = header_len + body_len;
+		buf.resize(payload_len);
+		buf[0] |= uint8_t((mHeader.fin ? 1 : 0) << 7);
+		buf[0] |= [](OPCODE opcode) -> uint8_t {
+			switch (opcode) {
+			case OPCODE::CONTINUE:	return 0x00;
+			case OPCODE::TEXT:		return 0x01;
+			case OPCODE::BINARY:	return 0x02;
+			case OPCODE::CLOSE:		return 0x08;
+			case OPCODE::PING:		return 0x09;
+			case OPCODE::PONG:		return 0x0A;
+			case OPCODE::UNKNOWN:	
+			default:				return 0x03;
+			}
+		}(mHeader.opcode);
+		buf[1] |= uint8_t((mHeader.mask ? 1 : 0) << 7);
+		if (body_len < 126) {
+			buf[1] |= body_len;
+		}
+		else if (body_len < 0x10000) {
+			buf[1] |= 126;
+			*(reinterpret_cast<uint16_t*>(&buf[2])) = uint16_t(body_len);
+		} 
+		else {
+			buf[1] |= 127;
+			*(reinterpret_cast<uint64_t*>(&buf[2])) = uint64_t(body_len);
+		}
+		if (mHeader.mask) {
+			size_t mask_key_offset = header_len - 4;
+			*(reinterpret_cast<uint32_t*>(&buf[mask_key_offset])) = uint32_t(mHeader.mask_key);
+		}
+		memcpy(buf.data() + header_len, mBody.data.data(), body_len);
+
 	}
 
 
