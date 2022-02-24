@@ -58,6 +58,48 @@ namespace ws {
 		return true;
 	}
 
+	bool WSConnection::write(WSPayload& payload) {
+		std::vector<uint8_t> raw_packet;
+		payload.getRawPacket(raw_packet);
+		if (raw_packet.size() < 2) return false;
 
+		int serv_len = mSocket._send((char*)raw_packet.data(), raw_packet.size());
+		if (serv_len == -1) return false;
+		return true;
+	}
+
+	bool WSConnection::write_msg(std::string_view msg) {
+		char packet_buf[4096];
+		// FIN = 1 OpCode = 1 (text)
+		packet_buf[0] = 0b10000001;
+
+		size_t offset;
+		size_t msg_len = msg.length();
+
+		if (msg_len < 126) {
+			offset = 2;
+			packet_buf[1] = (char)msg_len;
+		}
+		else if (msg_len < 65536) {
+			offset = 4;
+			packet_buf[1] = 126;
+			*((uint16_t*)packet_buf + 2) = uint16_t(msg_len);
+		}
+		else {
+			offset = 10;
+			packet_buf[1] = 127;
+			*((uint64_t*)packet_buf + 2) = uint64_t(msg_len);
+		}
+
+		memcpy(packet_buf + offset, msg.data(), msg_len);
+
+		size_t msg_size = offset + msg_len;
+
+		mSocket._send(packet_buf, msg_len);
+
+		return 0;
+
+
+	}
 
 }

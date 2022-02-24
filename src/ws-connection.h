@@ -15,6 +15,10 @@ namespace ws {
 		/* if read data failed, return false  */
 		bool read(WSPayload& payload);
 
+		bool write(WSPayload& payload);
+
+		bool write_msg(std::string_view msg);
+
 		std::shared_ptr<WSConnection> share() {
 			return shared_from_this();
 		}
