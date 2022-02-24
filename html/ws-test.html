@@ -5,7 +5,8 @@
 
     <script language="javascript" type="text/javascript">
 
-        var ws_url = "ws://localhost:7070";
+        //var ws_url = "wss://socketsbay.com/wss/v2/2/demo/";
+        var ws_url = "ws://localhost:7070/";
         var output;
 
         function init() {
@@ -24,6 +25,8 @@
         function onOpen(event) {
             writeToScreen("Connected");
             doSend("Test Message LNOGLNGONG");
+            doSend("Message2");
+            doSend("Message3");
         }
 
         function onClose(event) {
@@ -31,6 +34,7 @@
         }
 
         function onMessage(event) {
+            console.log(event)
             writeToScreen('<span styl="color: blue;">received: ' + event.data + '</span>');
             websocket.close();
         }

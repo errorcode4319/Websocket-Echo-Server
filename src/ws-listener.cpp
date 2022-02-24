@@ -78,10 +78,12 @@ namespace ws {
                         Send Client Socket to Main Service 
                     */
                     auto conn = std::make_shared<WSConnection>(clntSock);
+
+
                     while (true) {
                         WSPayload payload;
                         if (conn->read(payload) == false) {
-                            break;
+                            continue;
                         }
                         auto header = payload.getHeader();
                         std::cout << "FIN: " << header.fin << std::endl;
@@ -90,13 +92,18 @@ namespace ws {
                         std::cout << "MASK Key: " << std::hex << std::setfill('0') << std::setw(8) << header.mask_key << std::dec << std::endl;
                         std::cout << "Data len: " << header.len << std::endl;
 
+                        if (payload.getOPCode() == OPCODE::CLOSE) break;
+
                         auto body = payload.getBody();
 
                         std::string msg{ body.data.begin(), body.data.end() };
                         std::cout << "Received Data => " << msg << std::endl;
-
-                        if(conn->write_msg(msg) == false) break;
+                        if (msg == "shutdown") break;
+                        if(msg == "echo")
+                            conn->write_msg("a");
                     }
+                    
+
                     
                 }
                 else {

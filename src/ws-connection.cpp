@@ -94,10 +94,11 @@ namespace ws {
 		memcpy(packet_buf + offset, msg.data(), msg_len);
 
 		size_t msg_size = offset + msg_len;
-
-		mSocket._send(packet_buf, msg_len);
-
-		return 0;
+		std::cout << msg_size << std::endl;
+		int serv_len = mSocket._send(packet_buf, msg_size);
+		std::cout << serv_len << std::endl;
+		if (serv_len == -1) return false;
+		return true;
 
 
 	}

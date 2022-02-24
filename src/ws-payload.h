@@ -9,13 +9,13 @@ namespace ws {
 	using FLAG = bool;
 
 	enum class OPCODE : uint8_t {
-		CONTINUE = 0,	//0x0
-		TEXT,			//0x1
-		BINARY,			//0x2
-		CLOSE,			//0x8
-		PING,			//0x9
-		PONG,			//0xA
-		UNKNOWN
+		CONTINUE = 0x0,	//0x0
+		TEXT	 = 0x1,			//0x1
+		BINARY	 = 0x2,			//0x2
+		CLOSE	 = 0x8,			//0x8
+		PING	 = 0x9,			//0x9
+		PONG     = 0xA,			//0xA
+		UNKNOWN  = 0x3
 	};
 
 	struct packet_header_t {
