@@ -100,7 +100,7 @@ namespace ws {
                         std::cout << "Received Data => " << msg << std::endl;
                         if (msg == "shutdown") break;
                         if(msg == "echo")
-                            conn->write_msg("a");
+                            conn->write_msg("echo");
                     }
                     
 

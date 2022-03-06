@@ -69,34 +69,18 @@ namespace ws {
 	}
 
 	bool WSConnection::write_msg(std::string_view msg) {
-		char packet_buf[4096];
+		std::vector<uint8_t> packet_buf(128, 0);
+		// msglen < 126
 		// FIN = 1 OpCode = 1 (text)
 		packet_buf[0] = 0b10000001;
-
-		size_t offset;
+		size_t offset = 2;
 		size_t msg_len = msg.length();
 
-		if (msg_len < 126) {
-			offset = 2;
-			packet_buf[1] = (char)msg_len;
-		}
-		else if (msg_len < 65536) {
-			offset = 4;
-			packet_buf[1] = 126;
-			*((uint16_t*)packet_buf + 2) = uint16_t(msg_len);
-		}
-		else {
-			offset = 10;
-			packet_buf[1] = 127;
-			*((uint64_t*)packet_buf + 2) = uint64_t(msg_len);
-		}
+		packet_buf[1] = uint8_t(msg_len);
+		memcpy(packet_buf.data() + offset, msg.data(), msg_len);
 
-		memcpy(packet_buf + offset, msg.data(), msg_len);
-
-		size_t msg_size = offset + msg_len;
-		std::cout << msg_size << std::endl;
-		int serv_len = mSocket._send(packet_buf, msg_size);
-		std::cout << serv_len << std::endl;
+		size_t data_len = offset + msg_len;
+		int serv_len = mSocket._send((char*)packet_buf.data(), data_len);
 		if (serv_len == -1) return false;
 		return true;
 
